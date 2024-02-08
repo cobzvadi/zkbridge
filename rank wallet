@@ -1,0 +1,17 @@
+--Error: Unable to fully debug query 
+WITH sum_stats AS (
+  SELECT
+    wallet,
+    SUM(txs) AS txs
+  FROM query_2772192
+  GROUP BY
+    wallet
+)
+SELECT
+  ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC NULLS FIRST, SUM(txs) DESC NULLS FIRST) AS rank_id,
+  wallet,
+  COUNT(*) AS contracts,
+  SUM(txs) AS txs
+FROM sum_stats
+GROUP BY
+  wallet
